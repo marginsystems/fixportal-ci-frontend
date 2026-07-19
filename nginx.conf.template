@@ -3,6 +3,11 @@ server {
     root /usr/share/nginx/html;
     index index.html;
 
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()" always;
+
     location /api/ {
         # BACKEND_URL must be a bare origin — no trailing slash, no path
         # (e.g. http://backend:3000). A trailing slash or path causes nginx to

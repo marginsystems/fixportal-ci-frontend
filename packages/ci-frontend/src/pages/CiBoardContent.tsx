@@ -168,16 +168,36 @@ export function CiBoardContent() {
 
   if (snapshot.isPending) {
     return (
-      <main className="dashboard-page">
+      <main className="dashboard-page dashboard-page--loading" key="loading">
         <div className="state-msg">Loading dashboard…</div>
+        <div className="summary-panels dashboard__loading-panels" aria-hidden="true">
+          {[0, 1, 2].map(panel => (
+            <div className="summary-panel dashboard__loading-panel" key={panel}>
+              <span className="dashboard__loading-line dashboard__loading-line--short" />
+              <span className="dashboard__loading-line" />
+              <span className="dashboard__loading-line" />
+            </div>
+          ))}
+        </div>
       </main>
     )
   }
 
-  if (snapshot.isError) {
+  if (snapshot.isError && !snapshot.data) {
     return (
       <main className="dashboard-page">
-        <div className="state-msg state-msg--error">Dashboard unavailable.</div>
+        <div className="state-msg state-msg--error">
+          Dashboard unavailable. Retrying automatically.{' '}
+          <button
+            type="button"
+            className="state-msg__action"
+          onClick={async () => {
+            await snapshot.refetch().catch(() => {})
+          }}
+          >
+            Retry now
+          </button>
+        </div>
       </main>
     )
   }
@@ -221,7 +241,7 @@ export function CiBoardContent() {
   )
 
   return (
-    <main className="dashboard-page" tabIndex={-1}>
+    <main className="dashboard-page" key="dashboard" tabIndex={-1}>
       <div className="dashboard__sticky">
       <div className="dashboard__toolbar">
         <input
@@ -232,9 +252,16 @@ export function CiBoardContent() {
           value={filters.filters.search}
           onChange={e => filters.setSearch(e.target.value)}
         />
-        <span className="dashboard__refreshed">
-          <span className="live-dot" aria-hidden="true" />
-          updated {formatRelativeTime(refreshedAt)}
+        <span className="dashboard__refresh-state">
+          <span className="dashboard__refreshed">
+            <span className="live-dot" aria-hidden="true" />
+            updated {formatRelativeTime(refreshedAt)}
+          </span>
+          {snapshot.isError && (
+            <span className="dashboard__refresh-warning" role="status">
+              refresh failed · retrying
+            </span>
+          )}
         </span>
       </div>
       <div className="dashboard__filter-row">

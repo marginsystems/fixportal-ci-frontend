@@ -9,6 +9,8 @@ export interface WorkflowRun {
   branch: string | null
   event: string | null
   updatedAt: string
+  repository?: string | null
+  workflowFile?: string | null
 }
 
 export interface WorkflowSnapshot {
@@ -50,8 +52,9 @@ export interface RepositorySnapshot {
   workflows: WorkflowSnapshot[]
   pullRequests: PullRequest[]
   metrics: RepoMetrics | null
-  deploys: JobSignal[]
-  packages: JobSignal[]
+  deploys: JobSignal[] | null
+  packages: JobSignal[] | null
+  lastMergedPr?: MergedPr | null
 }
 
 export interface SummaryCount {
@@ -73,6 +76,7 @@ export type CiTrendState = 'noData' | 'passing' | 'failing'
 export interface CiTrendBucket {
   bucketStart: string
   state: CiTrendState
+  isBackfilled?: boolean
 }
 
 export interface DashboardSnapshot {
@@ -81,5 +85,6 @@ export interface DashboardSnapshot {
   repositories: RepositorySnapshot[]
   summary: SummaryCount[]
   lastMergedPr: MergedPr | null
-  ciTrend?: CiTrendBucket[]
+  ciTrend?: CiTrendBucket[] | null
+  publicCiTrend?: CiTrendBucket[] | null
 }

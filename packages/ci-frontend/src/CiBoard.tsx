@@ -145,7 +145,7 @@ export function CiBoard({
 }: CiBoardProps) {
   // Label reflects whether the board actually consumes a privileged data source,
   // not merely that a signal was passed — matches the toolbar scope descriptor.
-  const hasAdminSource = Boolean(adminSnapshotUrl || adminSnapshotFetcher)
+  const effectiveAdmin = adminSignal && Boolean(adminSnapshotUrl || adminSnapshotFetcher)
 
   // The sticky toolbar+summary band freezes at top = the header's height. That
   // height varies with the host's logo, so measure it and publish the exact value
@@ -176,7 +176,7 @@ export function CiBoard({
               <span className="ci-embed__lockup">
                 {logo ?? <span className="ci-embed__wordmark-text">CI Dashboard</span>}
                 <span className="ci-embed__descriptor">
-                  CI Dashboard {adminSignal && hasAdminSource ? '[Admin]' : '[Guest]'}
+                  CI Dashboard {effectiveAdmin ? '[Admin]' : '[Guest]'}
                 </span>
               </span>
               {showThemeSwitcher && (
@@ -185,7 +185,7 @@ export function CiBoard({
                 </div>
               )}
             </header>
-            <CiAdminProvider value={adminSignal}>
+            <CiAdminProvider value={effectiveAdmin}>
               <CiBoardContent />
             </CiAdminProvider>
           </div>

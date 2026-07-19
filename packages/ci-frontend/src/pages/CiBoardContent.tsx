@@ -191,9 +191,9 @@ export function CiBoardContent() {
           <button
             type="button"
             className="state-msg__action"
-            onClick={async () => {
-              await snapshot.refetch()
-            }}
+          onClick={async () => {
+            await snapshot.refetch().catch(() => {})
+          }}
           >
             Retry now
           </button>

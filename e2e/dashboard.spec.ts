@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import type { Page } from '@playwright/test'
+import type { DashboardSnapshot } from '@fix-portal/ci-frontend'
 
 const snapshot = {
   refreshedAt: '',
@@ -46,7 +47,7 @@ const snapshot = {
   ],
   lastMergedPr: null,
   ciTrend: [],
-}
+} satisfies DashboardSnapshot
 
 async function openDashboard(page: Page, responseDelay = 0, refreshedAt = new Date().toISOString()) {
   await page.route('**/api/dashboard/snapshot', async route => {
